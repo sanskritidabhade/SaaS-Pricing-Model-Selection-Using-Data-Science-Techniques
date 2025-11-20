@@ -1,11 +1,8 @@
-'''
-Libraries required:
-1. pandas 
-2. numpy 
-3. scikit-learn 
-4. matplotlib 
-5. seaborn 
-6. jupyterlab notebook 
-7. openpyxl 
-8. python-dateutil
-'''
+pandas 
+numpy 
+scikit-learn 
+matplotlib 
+seaborn 
+jupyterlab
+openpyxl 
+python-dateutil

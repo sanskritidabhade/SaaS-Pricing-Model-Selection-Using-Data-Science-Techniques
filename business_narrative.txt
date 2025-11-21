@@ -28,10 +28,10 @@ KEY FINDINGS:
 3. CUSTOMER SEGMENTATION
    We identified 4 distinct customer segments with varying price sensitivities:
 
-   • Premium Segment (0 customers): High LTV/CAC, low churn - can support premium pricing
-   • Standard Segment (0 customers): Balanced metrics - optimal for base pricing
-   • Growth Segment (0 customers): Potential for growth - requires competitive pricing
-   • At-Risk Segment (760 customers): High churn risk - needs retention pricing
+   • Premium Segment (219 customers): High LTV/CAC, low churn - can support premium pricing
+   • Standard Segment (760 customers): Balanced metrics - optimal for base pricing
+   • Growth Segment (1538 customers): Potential for growth - requires competitive pricing
+   • At-Risk Segment (1705 customers): High churn risk - needs retention pricing
 
 4. EXPECTED BUSINESS IMPACT
    Implementing the recommended pricing strategy is projected to:

@@ -1,3 +1,0 @@
-Model,Task,Primary Metric,Score,Status
-Decision Tree,Churn Classification,Test Accuracy,0.9030,✓ Complete
-K-Means Clustering,Customer Segmentation,Silhouette Score,0.1713,✓ Complete

@@ -11,7 +11,7 @@ This project leverages machine learning and statistical analysis to optimize Saa
 - Calculating price elasticity of demand
 - Recommending tiered pricing structures
 
-**Key Achievement**: Identified optimal pricing strategy that achieves a 4.76 LTV/CAC ratio while maintaining acceptable churn rates.
+**Key Achievement**: Built a leakage-free pricing pipeline on 7,057 real customer records, with a cross-validated revenue model (R² ≈ 0.97), an honest churn classifier (AUC ≈ 0.89), and an elasticity-based pricing recommendation. See `WHAT_I_FIXED.md` for the model audit that corrected an earlier version.
 
 ## 🎯 Business Problem
 
@@ -25,11 +25,14 @@ This project provides a data-driven framework to solve this multi-objective opti
 
 ## 🔍 Key Findings
 
-- **Optimal Price Point**: $1,753.88 (34.7% decrease from baseline)
-- **Expected LTV/CAC Ratio**: 4.76 (exceeds healthy threshold of 3.0)
-- **Price Elasticity**: -2.191 (elastic demand)
-- **Customer Segments**: 4 distinct segments identified
-- **Projected MRR**: $8,958,995
+- **Baseline avg price**: $190.19 · **Mean monthly churn**: 5.31% · **Avg LTV/CAC**: ~33
+- **Price Elasticity**: -1.03 (roughly unit-elastic; 95% CI [-1.24, -0.82])
+- **Revenue (ARPU) model**: R² ≈ 0.97 (5-fold CV 0.968 ± 0.001), leakage-checked
+- **Churn model**: ROC-AUC ≈ 0.89 (churn-rate column excluded from features)
+- **Customer Segments**: 4, ranked by honest LTV/CAC (Premium > Standard > Growth > At-Risk)
+- **Pricing recommendation**: presented as a modelled scenario under an LTV/CAC ≥ 3.0 guardrail, not a point forecast
+
+> **Note on methodology:** An earlier version of this project reported a revenue R² of 1.000 and a ~69% churn rate. Both were artifacts (target leakage and an incorrect subscription-level rollup). The current pipeline corrects them; `WHAT_I_FIXED.md` documents the full audit.
 
 ## 🗂️ Project Structure
 
@@ -87,7 +90,7 @@ This project provides a data-driven framework to solve this multi-objective opti
 
 ### 1. Data Collection & Cleaning
 - Integrated multiple SaaS business datasets
-- Cleaned and standardized 4,222 customer records
+- Analyzed 7,057 customer-level records with monthly economics (2023–24)
 - Engineered features for model training
 
 ### 2. Exploratory Data Analysis
@@ -145,39 +148,42 @@ pip install -r requirements.txt
    - Run all cells to process raw data
 
 2. **Model Training & Optimization**:
-   - Open `Notebooks/02_modeling.ipynb`
+   - Open `Notebooks/02_modeling_CORRECTED.ipynb` (leakage-free rebuild)
    - Execute cells to train models and generate recommendations
 
 3. **View Results**:
    - Check `Optimization Results/` for CSV outputs
    - Review `Visualizations/` for charts and graphs
-   - Read `business_narrative.txt` for executive summary
+   - Read `business_narrative_CORRECTED.txt` for the executive summary
+   - Read `WHAT_I_FIXED.md` for the model audit and corrections
 
 ## 📊 Customer Segments
 
 | Segment | Size | Characteristics | Recommended Pricing |
 |---------|------|----------------|---------------------|
-| Premium | 219 | High LTV/CAC, low churn | $2,630.83 |
-| Standard | 760 | Balanced metrics | $1,753.88 |
-| Growth | 1,538 | High potential | $1,403.11 |
-| At-Risk | 1,705 | High churn risk | $1,052.33 |
+| Premium | 693 | Highest LTV/CAC (~146), low churn (~2%) | Supports premium pricing |
+| Standard | 2,039 | Strong LTV/CAC (~34), low churn (~2%) | Base pricing |
+| Growth | 1,277 | Moderate LTV/CAC (~28), higher churn (~7%) | Competitive pricing |
+| At-Risk | 3,048 | Lowest LTV/CAC (~9), highest churn (~8%) | Retention pricing |
 
 ## 📉 Key Metrics
 
-- **Churn Rate Target**: ≤20%
-- **LTV/CAC Ratio Target**: ≥3.0
-- **Model Performance**:
-  - Churn Prediction AUC: 0.940
-  - Revenue Forecast R²: 1.000
+- **Mean monthly churn (observed)**: 5.31%
+- **LTV/CAC guardrail (optimization constraint)**: ≥3.0
+- **Model Performance (honest, hold-out / cross-validated)**:
+  - Churn Prediction ROC-AUC: ~0.89
+  - Revenue (ARPU) R²: ~0.97 (5-fold CV 0.968 ± 0.001)
 
 ## 💡 Recommendations
 
 ### Tiered Pricing Strategy
-Implement a four-tier pricing structure tailored to customer segments:
-- **Premium Tier**: $2,630.83 for high-value customers
-- **Standard Tier**: $1,753.88 as primary offering
-- **Growth Tier**: $1,403.11 for price-sensitive market
-- **Retention Tier**: $1,052.33 for at-risk customers
+Segment-based pricing, differentiated by each segment's LTV/CAC and churn profile:
+- **Premium**: highest willingness-to-pay; supports above-baseline pricing
+- **Standard**: healthy economics; anchor at the baseline price
+- **Growth**: price-sensitive; competitive pricing to expand the base
+- **At-Risk**: retention-focused pricing to protect lifetime value
+
+Exact tier prices depend on the elasticity assumptions in the optimization and should be validated by A/B testing before rollout.
 
 ### Implementation Roadmap
 1. **Months 1-2**: A/B test with 20% of new customers
@@ -191,6 +197,7 @@ Implement a four-tier pricing structure tailored to customer segments:
 - Real-world A/B testing required for validation
 - External market factors not fully captured
 - Customer survey validation recommended
+- The price→churn link in the optimization is a bounded modelling assumption, not a fitted causal estimate; elasticity is cross-sectional, not experimental
 
 ## 🔮 Future Enhancements
 

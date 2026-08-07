@@ -1,5 +1,5 @@
-Segment,Label,Current_Avg_Price,Recommended_Price,Current_LTV_CAC,Current_Churn,Count
-0,Standard,5942.68,1753.8834675509238,158.18,72.0%,760
-1,Premium,14124.04,2630.8252013263855,384.0,70.0%,219
-2,At-Risk,1205.18,1052.3300805305541,24.25,69.0%,1705
-3,Growth,1088.63,1403.106774040739,39.05,72.0%,1538
+Segment,Label,Count,Current_Avg_Price,Recommended_Price,Current_LTV_CAC,Current_Monthly_Churn
+3,Premium,693,364.45,148.34,145.78,2.0%
+1,Standard,2039,123.84,114.11,33.58,2.0%
+2,Growth,1277,369.73,96.99,28.42,7.0%
+0,At-Risk,3048,119.72,79.88,9.35,8.0%

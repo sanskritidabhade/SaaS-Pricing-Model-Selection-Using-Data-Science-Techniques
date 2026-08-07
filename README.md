@@ -37,35 +37,23 @@ This project provides a data-driven framework to solve this multi-objective opti
 ## 🗂️ Project Structure
 
 ```
-├── Cleaned Data/                    # Processed datasets
-│   ├── cac_ltv_cleaned.csv
-│   ├── ravenstack_cleaned.csv
-│   └── saas_businesses_cleaned.csv
+├── Notebooks/
+│   ├── 01_cleaning.ipynb                 # Data cleaning and preprocessing
+│   ├── 02_modeling_CORRECTED.ipynb       # Leakage-free modeling pipeline
+│   ├── Cleaned Data/                     # Processed datasets + EDA figures
+│   ├── Optimization Results/             # Model outputs and recommendations (CSV)
+│   └── Visualizations/                   # Charts and graphs
 │
-├── Optimization Results/            # Model outputs and recommendations
-│   ├── model_dataset_with_predictions.csv
-│   ├── optimization_summary.csv
-│   ├── price_scenarios.csv
-│   └── segment_pricing_recommendations.csv
-│
-├── Visualizations/                  # Charts and graphs
-│   ├── customer_segmentation.png
-│   ├── final_recommendation.png
-│   ├── model_performance.png
-│   └── price_optimization_curves.png
-│
-├── Raw Project Datasets/            # Source data
+├── Raw Project Datasets/                 # Source data
 │   ├── Business Startups Data on SAAS products/
-│   ├── CAC-LTV Model Analysis for SaaS Business Insights/
+│   ├── CAC-LTV Model Analysis for SaaS Business Insights/   # cac_ltv_model.csv (used)
 │   └── SaaS Subscription & Churn Analytics Dataset/
 │
-├── Notebooks/
-│   ├── 01_cleaning.ipynb           # Data cleaning and preprocessing
-│   └── 02_modeling.ipynb           # Model development and optimization
-│
-├── business_narrative.txt          # Executive summary of findings
-├── requirements.txt                # Python dependencies
-└── README.md                       # This file
+├── fixed_modeling.py                     # Script version of the corrected pipeline
+├── WHAT_I_FIXED.md                       # Model audit: the 5 defects and their fixes
+├── business_narrative.txt                # Executive summary
+├── requirements.txt                      # Python dependencies
+└── README.md                             # This file
 ```
 
 ## 🛠️ Technologies Used
@@ -152,9 +140,9 @@ pip install -r requirements.txt
    - Execute cells to train models and generate recommendations
 
 3. **View Results**:
-   - Check `Optimization Results/` for CSV outputs
-   - Review `Visualizations/` for charts and graphs
-   - Read `business_narrative_CORRECTED.txt` for the executive summary
+   - Check `Notebooks/Optimization Results/` for CSV outputs
+   - Review `Notebooks/Visualizations/` for charts and graphs
+   - Read `business_narrative.txt` for the executive summary
    - Read `WHAT_I_FIXED.md` for the model audit and corrections
 
 ## 📊 Customer Segments

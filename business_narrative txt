@@ -1,116 +1,52 @@
+====================================================================================
+        SAAS PRICING OPTIMIZATION - EXECUTIVE SUMMARY (CORRECTED)
+====================================================================================
 
+DATA: 7,057 real customer records with monthly economics (Jan 2023 - Dec 2024),
+from cac_ltv_model.csv.
 
-====================================================================================================
-                    SAAS PRICING OPTIMIZATION - EXECUTIVE SUMMARY
-====================================================================================================
-
-OBJECTIVE:
-Determine the optimal pricing strategy to maximize the LTV-to-CAC ratio while maintaining 
-sustainable churn rates and ensuring long-term business viability.
-
-====================================================================================================
+METHODOLOGY NOTE (why this version supersedes the first):
+An earlier pass reported a revenue model R2 of 1.000 and a ~69% churn rate. Both
+were artifacts: the revenue model had target leakage (predicting MRR from MRR),
+and the 69% figure came from rolling subscription records up incorrectly. This
+version fixes those and reports honest, cross-validated numbers.
 
 KEY FINDINGS:
 
-1. OPTIMAL PRICING
-   The analysis recommends an optimal price point of $1753.88, representing a 
-   34.7% decrease from the current average price of $2685.63.
+1. BASELINE ECONOMICS (customer level, honestly derived)
+   - Average plan price      : $190.19
+   - Mean monthly churn       : 5.31%   (not 69%)
+   - Average LTV/CAC          : 33.2
+   LTV is computed as ARPU x gross_margin x (1 / monthly_churn) - the standard
+   formula - rather than the earlier age-based formula that inflated LTV.
 
-   This price maximizes the LTV/CAC ratio at 4.76, which exceeds 
-   the healthy threshold of 3.0, while maintaining churn at 68.9%, 
-   near the acceptable limit of 20%.
+2. REVENUE (ARPU) MODEL
+   - Honest test R2 of ~0.97 (5-fold CV 0.968 +/- 0.001), MAE ~$16.
+   - Plan price is the dominant driver, but the model is NOT perfect, and a
+     leakage self-check confirms no single feature is collinear with the target.
 
-2. PRICE ELASTICITY
-   Our analysis reveals a price elasticity of -2.191, indicating that a 10% price 
-   increase would result in approximately 21.9% decrease in demand. This elastic
-   demand suggests price sensitivity exists, providing constraints in pricing decisions.
+3. CHURN MODEL
+   - Random Forest, ROC-AUC ~0.89 on a clearly-defined target (monthly churn
+     above the portfolio median). The churn_rate column is deliberately excluded
+     from the features so the model does not predict the label from itself.
 
-3. CUSTOMER SEGMENTATION
-   We identified 4 distinct customer segments with varying price sensitivities:
+4. PRICE ELASTICITY
+   - Estimated elasticity: -1.03 (roughly unit-elastic). A 10% price increase
+     is associated with an approximately 10% decrease in demand.
 
-   • Premium Segment (219 customers): High LTV/CAC, low churn - can support premium pricing
-   • Standard Segment (760 customers): Balanced metrics - optimal for base pricing
-   • Growth Segment (1538 customers): Potential for growth - requires competitive pricing
-   • At-Risk Segment (1705 customers): High churn risk - needs retention pricing
+5. SEGMENTATION
+   - Four K-Means segments on honest economics, ranked by LTV/CAC:
+     Premium > Standard > Growth > At-Risk.
 
-4. EXPECTED BUSINESS IMPACT
-   Implementing the recommended pricing strategy is projected to:
+RECOMMENDATION:
+   Under the modelled elasticity and an LTV/CAC >= 3.0 guardrail, total revenue is
+   maximised at a price BELOW the current average - consistent with demand being
+   elastic. This is presented as a scenario under stated assumptions, not as a
+   point forecast. Real-world A/B testing is required before any rollout.
 
-   • Generate total MRR of $8,958,995
-   • Achieve an average LTV of $3835.00 per customer
-   • Improve LTV/CAC ratio by -67.65 (-93.4%)
-   • Maintain churn at 68.9% (-2.0pp from current)
-
-====================================================================================================
-
-RECOMMENDATIONS:
-
-1. IMPLEMENT TIERED PRICING STRUCTURE
-   Adopt a segment-based pricing strategy:
-   - Premium tier at $2630.83 for high-value customers
-   - Standard tier at $1753.88 as the primary offering
-   - Growth tier at $1403.11 to capture price-sensitive market
-   - Retention pricing at $1052.33 for at-risk customers
-
-2. PHASE IMPLEMENTATION STRATEGY
-   - Month 1-2: A/B test the new pricing with 20% of new customers
-   - Month 3-4: Monitor churn, LTV, and conversion metrics closely
-   - Month 5-6: Roll out to 100% of new customers if metrics are favorable
-   - Existing customers: Grandfather current pricing with option to upgrade
-
-3. CONTINUOUS MONITORING
-   Track these KPIs weekly:
-   - Churn rate (target: ≤20%)
-   - LTV/CAC ratio (target: ≥3.0)
-   - MRR growth rate
-   - Conversion rates by segment
-
-4. RISK MITIGATION
-   - Set up early warning system if churn exceeds 20%
-   - Prepare win-back campaigns for premium customers
-   - Monitor competitive pricing changes
-   - Review pricing quarterly based on new data
-
-====================================================================================================
-
-METHODOLOGY NOTES:
-
-Models Used:
-- Churn Prediction: Random Forest (AUC: 0.940)
-- Revenue Forecasting: Linear Regression (R²: 1.000)
-- Customer Segmentation: K-Means Clustering (k=4)
-- Price Elasticity: Log-log regression
-
-Data: Analysis based on 4,222 customer records with 9 features.
-
-Confidence Level: High - Models validated on hold-out test sets with strong predictive performance.
-
-====================================================================================================
-
-LIMITATIONS & NEXT STEPS:
-
-1. This analysis assumes price is the primary driver; other factors (features, support, UX) also 
-   influence churn and willingness to pay.
-
-2. Real-world testing (A/B tests) is essential to validate these predictions before full rollout.
-
-3. External factors (competition, market conditions, seasonality) are not fully captured and 
-   should be monitored.
-
-4. Consider running customer surveys to validate willingness-to-pay at recommended price points.
-
-5. Develop feature-based value pricing to justify premium tier pricing with enhanced features.
-
-====================================================================================================
-
-CONCLUSION:
-
-The optimal pricing strategy balances revenue maximization with customer retention, achieving 
-sustainable growth through improved LTV/CAC ratios. The segment-based approach allows for price 
-discrimination that captures maximum value from high-willingness-to-pay customers while remaining 
-competitive for price-sensitive segments.
-
-Implementation of this strategy is expected to improve business unit economics significantly while 
-maintaining healthy customer relationships and sustainable growth trajectories.
-
-====================================================================================================
+LIMITATIONS:
+   - The price-to-churn link in the optimisation is a bounded modelling
+     assumption, not a fitted causal estimate.
+   - Elasticity is estimated cross-sectionally, not from a controlled experiment.
+   - External factors (competition, seasonality) are not captured.
+====================================================================================
